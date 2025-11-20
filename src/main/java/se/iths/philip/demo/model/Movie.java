@@ -69,7 +69,7 @@ public class Movie {
         }
         Document doc = new Document()
                 .append("title", this.title)
-                .append("genre", genreDocs)
+                .append("genres", genreDocs)
                 .append("year", this.year);
         if (this.id != null) {
             doc.append("_id", this.id);
