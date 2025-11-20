@@ -13,7 +13,7 @@ import org.bson.conversions.Bson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDAOMongo implements MovieDAO {
+public class MovieDAOMongo implements MovieDAO<Document> {
 
     private final MongoCollection<Document> collection;
 

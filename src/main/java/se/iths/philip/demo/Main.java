@@ -17,16 +17,16 @@ public class Main {
 
             MovieDAO movieDAO = new MovieDAOMongo(collection);
 
-            movieDAO.insert("Pulp Fiction", 1994);
-            movieDAO.insert("Avatar", 2009);
-            movieDAO.insert("Inception", 2010);
-            movieDAO.insert("The Godfather", 1972);
-            movieDAO.findAll();
-            Document doc = movieDAO.findByTitle("Pulp Fiction");
-            System.out.println("Hittad film: " + doc);
-
-            movieDAO.update("Pulp Fiction", "Pulp Fiction (Edited)");
-            movieDAO.delete("Pulp Fiction (Edited)");
+//            movieDAO.insert("Pulp Fiction", 1994);
+//            movieDAO.insert("Avatar", 2009);
+//            movieDAO.insert("Inception", 2010);
+//            movieDAO.insert("The Godfather", 1972);
+//            movieDAO.findAll();
+//            Document doc = movieDAO.findByTitle("Pulp Fiction");
+//            System.out.println("Hittad film: " + doc);
+//
+//            movieDAO.update("Pulp Fiction", "Pulp Fiction (Edited)");
+//            movieDAO.delete("Pulp Fiction (Edited)");
 
         } catch (Exception e) {
             e.printStackTrace();
