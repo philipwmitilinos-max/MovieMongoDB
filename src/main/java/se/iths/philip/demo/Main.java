@@ -5,8 +5,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import se.iths.philip.demo.dao.MovieDAO;
-import se.iths.philip.demo.dao.MovieDAOMongo;
+import se.iths.philip.demo.dao.MoviesMovieDAO;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +14,7 @@ public class Main {
             MongoDatabase db = client.getDatabase("moviesdb");
             MongoCollection<Document> collection = db.getCollection("movies");
 
-            MovieDAO movieDAO = new MovieDAOMongo(collection);
+//            MovieDAO movieDAO = new MovieDAOMongo(collection);
 
 //            movieDAO.insert("Pulp Fiction", 1994);
 //            movieDAO.insert("Avatar", 2009);
@@ -27,6 +26,9 @@ public class Main {
 //
 //            movieDAO.update("Pulp Fiction", "Pulp Fiction (Edited)");
 //            movieDAO.delete("Pulp Fiction (Edited)");
+
+            MoviesMovieDAO dao = new MoviesMovieDAO(collection);
+            dao.insert("Spirited Away", 2001);
 
         } catch (Exception e) {
             e.printStackTrace();
