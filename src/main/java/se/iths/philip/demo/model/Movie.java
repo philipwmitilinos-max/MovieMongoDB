@@ -60,6 +60,16 @@ public class Movie {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", year=" + year +
+                ", genres=" + genres +
+                '}';
+    }
+
     public Document toDocument() {
         List<Document> genreDocs = new ArrayList<>();
         if (this.genres != null) {

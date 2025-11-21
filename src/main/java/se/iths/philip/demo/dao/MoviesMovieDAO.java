@@ -2,6 +2,7 @@ package se.iths.philip.demo.dao;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -32,12 +33,10 @@ public class MoviesMovieDAO implements MovieDAO<Movie> {
                         Filters.eq("year", movie.getYear())
                 )
         ).first();
-
         if (existing != null) {
             System.out.println("Filmen finns redan i databasen: " + existing.toJson());
             return;
         }
-
         Document doc = movie.toDocument();
         collection.insertOne(doc);
         movie.setId(doc.getObjectId("_id"));
@@ -53,7 +52,7 @@ public class MoviesMovieDAO implements MovieDAO<Movie> {
     }
 
     @Override
-    public List findAll() {
+    public List<Movie> findAll() {
         List<Document> movies = collection.find().into(new ArrayList<>());
         return movies.stream()
                 .map(document -> Movie.fromDocument(document))
@@ -67,8 +66,27 @@ public class MoviesMovieDAO implements MovieDAO<Movie> {
         return Movie.fromDocument(document);
     }
 
+    public List<Movie> sortByTitle() {
+        List<Document> docs = collection.find()
+                .sort(Sorts.ascending("title"))
+                .into(new ArrayList<>());
+        return docs.stream().map(Movie::fromDocument).toList();
+    }
+
+    public List<Movie> sortByYear() {
+        List<Document> docs = collection.find()
+                .sort(Sorts.ascending("year"))
+                .into(new ArrayList<>());
+        return docs.stream().map(Movie::fromDocument).toList();
+    }
+
     @Override
     public void update(String oldTitle, String newTitle) {
+//        collection.replaceOne(
+//                Filters.eq("title", oldTitle),
+//                updatedMovie.toDocument()
+//        );
+        // Det kod blocket fungerar.
         Bson filter = Filters.eq("title", oldTitle);
         Bson update = Updates.set("title", newTitle);
         UpdateResult result = collection.updateOne(filter, update);
@@ -77,6 +95,21 @@ public class MoviesMovieDAO implements MovieDAO<Movie> {
         } else {
             System.out.println("Uppdateringen bekräftades inte av servern.");
         }
+    }
+
+    public void updateMovie(Movie movie) {
+        Bson filter = Filters.eq("title", movie);
+        Bson update = Updates.set("genres", movie);
+        UpdateResult result = collection.updateOne(filter, update);
+        if (result.wasAcknowledged()) {
+            System.out.println("Antal dokument uppdaterade: " + result.getModifiedCount());
+        } else {
+            System.out.println("Uppdateringen bekräftades inte av servern.");
+        }
+    }
+
+    public void delete(Movie movie) {
+        collection.deleteOne(Filters.eq("_id", movie.getId()));
     }
 
     @Override
