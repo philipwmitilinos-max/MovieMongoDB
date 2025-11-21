@@ -5,6 +5,9 @@ import java.util.List;
 public interface MovieDAO<T> {
     void insert(String title, int year);
 
+    // Byter ut String title, int year till T movie.
+    void insert(T movie);
+
     List<T> findAll();
 
     T findByTitle(String title);

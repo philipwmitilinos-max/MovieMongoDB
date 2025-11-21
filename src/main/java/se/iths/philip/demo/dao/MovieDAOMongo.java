@@ -23,6 +23,19 @@ public class MovieDAOMongo implements MovieDAO<Document> {
 
     @Override
     public void insert(String title, int year) {
+        // De här kollar om det finns redan ett object i databasen med samma title och namn.
+        Document existing = collection.find(
+                Filters.and(
+                        Filters.eq("title", title),
+                        Filters.eq("year", year)
+                )
+        ).first();
+
+        if (existing != null) {
+            System.out.println("Filmen finns redan i databasen: " + existing.toJson());
+            return;
+        }
+
         Document doc = new Document()
                 .append("title", title)
                 .append("year", year);
@@ -36,6 +49,11 @@ public class MovieDAOMongo implements MovieDAO<Document> {
         } else {
             System.out.println("Insättning misslyckades!");
         }
+    }
+
+    @Override
+    public void insert(Document movie) {
+
     }
 
     @Override

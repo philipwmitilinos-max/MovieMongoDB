@@ -4,9 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import se.iths.philip.demo.model.Movie;
@@ -23,18 +21,35 @@ public class MoviesMovieDAO implements MovieDAO<Movie> {
 
     @Override
     public void insert(String title, int year) {
-        Document movie = new Document()
-                .append("title", title)
-                .append("year", year);
 
-        InsertOneResult result = collection.insertOne(movie);
+    }
 
-        if (result.wasAcknowledged()) {
-            BsonValue insertedId = result.getInsertedId();
-            System.out.println("Insatt dokument med ID: " + insertedId);
-        } else {
-            System.out.println("Insättning misslyckades!");
+    @Override
+    public void insert(Movie movie) {
+        Document existing = collection.find(
+                Filters.and(
+                        Filters.eq("title", movie.getTitle()),
+                        Filters.eq("year", movie.getYear())
+                )
+        ).first();
+
+        if (existing != null) {
+            System.out.println("Filmen finns redan i databasen: " + existing.toJson());
+            return;
         }
+
+        Document doc = movie.toDocument();
+        collection.insertOne(doc);
+        movie.setId(doc.getObjectId("_id"));
+        System.out.println("Ny film insatt: " + movie);
+//        Document movie = new Document().append("title", title).append("year", year);
+//        InsertOneResult result = collection.insertOne(movie);
+//        if (result.wasAcknowledged()) {
+//            BsonValue insertedId = result.getInsertedId();
+//            System.out.println("Insatt dokument med ID: " + insertedId);
+//        } else {
+//            System.out.println("Insättning misslyckades!");
+//        }
     }
 
     @Override
